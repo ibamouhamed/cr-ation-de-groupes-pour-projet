@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Groupes Étudiants</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Bienvenue sur la plateforme de gestion de groupes</h1>
+    </header>
+    <main>
+        <section id="create-group">
+            <h2>Créer un Groupe</h2>
+            <form id="groupForm">
+                <input type="text" id="groupName" placeholder="Nom du groupe" required>
+                <textarea id="groupDescription" placeholder="Description du groupe"></textarea>
+                <button type="submit">Créer</button>
+            </form>
+        </section>
+        <section id="join-group">
+            <h2>Groupes Disponibles</h2>
+            <ul id="groupsList"></ul>
+        </section>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+button {
+    padding: 10px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    background-color: #f4f4f4;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+// Variables pour stocker les groupes
+let groups = [];
+
+// Fonction pour créer un groupe
+function createGroup(name, description) {
+    const group = { name, description, members: 0, maxMembers: 10 };
+    groups.push(group);
+    displayGroups();
+}
+
+// Fonction pour afficher les groupes
+function displayGroups() {
+    const groupsList = document.getElementById("groupsList");
+    groupsList.innerHTML = '';
+    
+    groups.forEach((group, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <h3>${group.name}</h3>
+            <p>${group.description}</p>
+            <p>Membres : ${group.members}/${group.maxMembers}</p>
+            ${group.members < group.maxMembers 
+                ? `<button onclick="joinGroup(${index})">Rejoindre</button>`
+                : '<p>Groupe complet</p>'}
+        `;
+        groupsList.appendChild(li);
+    });
+}
+
+// Fonction pour rejoindre un groupe
+function joinGroup(index) {
+    if (groups[index].members < groups[index].maxMembers) {
+        groups[index].members += 1;
+        displayGroups();
